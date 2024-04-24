@@ -1,0 +1,47 @@
+version: "3.4"
+
+services:
+  backend:
+    build:
+      context: ./sms-hog-back
+    hostname: backend
+    working_dir: /app
+    networks:
+      - smshognet
+    environment:
+      - MONGO_CONNECT=mongodb://mongo:27017
+    depends_on:
+      - mongo
+    
+  frontend:
+    build: 
+      context: ./sms-hog-front
+    ports:
+      - "8000:80"
+    networks:
+      - smshognet
+    depends_on:
+      - backend
+  
+  mongo:
+    image:  skazuki/alpine-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - smshognet
+
+  php:
+    build:
+      context: ./example/php-api-client
+    profiles:
+      - donotstart
+    networks:
+      - smshognet
+    environment:
+      - API_URL_POST_SMS=http://backend
+
+networks:
+  smshognet:
+    driver: bridge
