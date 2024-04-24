@@ -17,7 +17,7 @@ docker-compose down
 ```
 
 ## php api client
-n the "example" folder, there is a sample PHP client.  
+In the "example" folder, there is a sample PHP client.  
 You can use it to send requests.  
 
 ```bash
